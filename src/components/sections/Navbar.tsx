@@ -1,22 +1,38 @@
 'use client'
 import { useAuth } from '@/context/AuthContext'
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 function Navbar() {
   const { logout, user } = useAuth()
-
   const route = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
-  // useEffect(() => {
-  //   if (localStorage) {
-  //     const userLocal = localStorage.getItem('user')
-  //     setUser(userLocal ? JSON.parse(userLocal) : null)
-  //   }
-  // }, [])
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false)
+      }
+    }
+
+    // Add event listener when dropdown is open
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    // Clean up
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isDropdownOpen])
 
   if (route === '/chats') {
     return null
@@ -62,7 +78,7 @@ function Navbar() {
         {/* User Actions - Desktop */}
         <div className="hidden md:flex items-center gap-4">
           {user ? (
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="flex items-center gap-2 border px-6 py-2 rounded cursor-pointer"
@@ -75,6 +91,7 @@ function Navbar() {
                   <Link
                     href="/chats"
                     className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-right"
+                    onClick={() => setIsDropdownOpen(false)}
                   >
                     دردشاتي
                   </Link>
@@ -91,12 +108,15 @@ function Navbar() {
               )}
             </div>
           ) : (
-            <Link
-              href="/auth/login"
+            <div
               className="primary-theme-btn text-white rounded-full px-6 py-2 text-sm"
+              onClick={() => {
+                localStorage.setItem('lastPage', route)
+                router.push('/auth/login')
+              }}
             >
               تسجيل الدخول
-            </Link>
+            </div>
           )}
         </div>
 

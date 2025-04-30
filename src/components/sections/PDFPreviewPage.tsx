@@ -1,20 +1,25 @@
+'use client'
 import Link from 'next/link'
-import PDFViewer from './PDFViewer'
+import dynamic from 'next/dynamic'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { API_BASE_URL } from '@/constants/domains'
 
-export default function PDFPreviewPage({
-  codeId,
-  fileId,
-}: {
-  codeId: string
-  fileId: string
-}) {
-  const original = `https://drive.google.com/uc?export=download&id=${fileId}`
-  // 'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf'
-  const proxyUrl = `/api/pdf?url=${encodeURIComponent(original)}`
+const PDFViewer = dynamic(() => import('./PDFViewer'), { ssr: false })
+
+export default function PDFPreviewPage() {
+  const [url, setUrl] = useState('')
+  const searchParams = useSearchParams()
+  const collectionName = searchParams.get('collectionName')
+  const codeId = searchParams.get('codeId')
+
+  useEffect(() => {
+    setUrl(`${API_BASE_URL}book/${collectionName}.pdf`)
+  }, [collectionName])
 
   return (
     <div className="relative top-[100px]">
-      <PDFViewer url={proxyUrl} />
+      <PDFViewer fileUrl={url} />
 
       <Link
         href={`/chats?codeId=${codeId}`}

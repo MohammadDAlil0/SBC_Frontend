@@ -13,7 +13,7 @@ interface Chat {
   name: string
 }
 
-export default function Sidebar() {
+export default function Sidebar({ hasNew }: { hasNew: boolean }) {
   const searchParams = useSearchParams()
   const chatId = searchParams.get('id')
   const { user } = useAuth()
@@ -37,7 +37,7 @@ export default function Sidebar() {
 
   useEffect(() => {
     fetchChats()
-  }, [])
+  }, [hasNew])
 
   return (
     <aside
@@ -47,9 +47,25 @@ export default function Sidebar() {
       <div className="md:p-4 p-2 overflow-y-auto">
         <Link
           href="/"
-          className="block mt-5 mb-10 md:text-[26px] text-[22px] text-[#1B2559] font-[700]"
+          className=" mt-5 mb-10 md:text-[26px] text-[22px] text-[#1B2559] font-[700] flex justify-between"
         >
           <h1>الكود السعودي الذكي</h1>
+          <svg
+            width={30}
+            height={30}
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M15 18L9 12L15 6"
+              stroke={'#000000'}
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>{' '}
         </Link>
 
         <div className="mt-2 space-y-2">

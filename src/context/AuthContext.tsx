@@ -42,6 +42,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const router = useRouter()
 
+  const handleLoginSuccess = () => {
+    const lastPage = localStorage.getItem('lastPage') || '/'
+    // console.log(lastPage)
+    router.push(lastPage)
+    // if (hasHistory) {
+    //   router.back()
+    // }
+    // // Fallback to dashboard
+    // else {
+    //   router.push('/')
+    // }
+  }
+
   useEffect(() => {
     const storedToken = localStorage.getItem('token')
 
@@ -88,7 +101,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         'Authorization'
       ] = `Bearer ${data.access_token}`
 
-      router.push('/')
+      handleLoginSuccess()
     } catch (err: any) {
       setError(err.response?.data?.message || 'فشل تسجيل الدخول')
     } finally {
@@ -114,7 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         'Authorization'
       ] = `Bearer ${data.access_token}`
 
-      router.push('/')
+      handleLoginSuccess()
     } catch (err: any) {
       setError(err.response?.data?.message || 'فشل إنشاء حساب جديد')
     } finally {

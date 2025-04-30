@@ -16,7 +16,13 @@ interface Message {
   content: string
 }
 
-export default function Chat() {
+export default function Chat({
+  setHasNew,
+  hasNew,
+}: {
+  setHasNew: () => void
+  hasNew: boolean
+}) {
   const searchParams = useSearchParams()
   const chatId = searchParams.get('id')
   const codeId = searchParams.get('codeId')
@@ -26,7 +32,6 @@ export default function Chat() {
   const [input, setInput] = useState('')
   const [isSending, setIsSending] = useState(false)
   const [page, setPage] = useState(0)
-  // const [hasMore, setHasMore] = useState(true)
   const limit = 100
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null) // Ref for auto-scrolling
@@ -142,7 +147,7 @@ export default function Chat() {
             onClick={() => setOpen(false)}
             className="absolute z-30 w-[100%] h-[100%] bg-[rgba(0,0,0,0.3)] left-0 right-0 top-0"
           ></div>
-          <Sidebar />
+          <Sidebar hasNew={hasNew} />
         </div>
       </div>
 
@@ -150,12 +155,18 @@ export default function Chat() {
         className="flex flex-col flex-1 overflow-y-auto md:p-20 md:pb-2 pt-20 p-6 pb-6"
         style={{ height: 'calc(100vh - 110px)' }}
       >
-        {!chatId && (
+        {!chatId && !codeId && (
           <div className="h-[100%] w-[100%] text-center flex items-center justify-center">
-            اختر أحد الأكواد ثم اكتب رسالتك للاستفسار{'    '}
-            <Link href="/#codes"> من هنا</Link>
+            <div>
+              اختر أحد الأكواد ثم اكتب رسالتك للاستفسار{' '}
+              <Link href="/#codes" className="underline text-primary mx-0.5">
+                (اختر كود)
+              </Link>{' '}
+              أو حدد محادثة سابقة
+            </div>
           </div>
         )}
+
         {/* {hasMore && (
           <button
             onClick={() => setPage((p) => p + 1)}
@@ -188,7 +199,7 @@ export default function Chat() {
       </div>
 
       {codeId ? (
-        <ChatInput />
+        <ChatInput setHasNew={setHasNew} />
       ) : (
         <div className=" bottom-0 z-30 relative  md:px-20 px-1 py-4 ">
           <div className="flex items-center gap-2 px-4 py-2">
@@ -198,20 +209,21 @@ export default function Chat() {
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="أريد إرسال رسالة"
               className="flex-1 bg-transparent text-black focus:outline-none border px-[20px] py-4 rounded-[45px]"
+              disabled={isSending}
             />
             <button
               onClick={handleSend}
               disabled={isSending}
-              className="ml-2 px-[20px] py-4 h-[54px] md:w-[192px] text-center rounded-[45px] gradient-btn cursor-pointer text-white"
+              className="relative ml-2 px-[20px] py-4 h-[54px] md:w-[192px] text-center rounded-[45px] gradient-btn cursor-pointer text-white disabled:opacity-60"
             >
-              {isSending ? 'جاري الإرسال...' : 'إرسال'}
+              إرسال
+              {isSending ? (
+                <div className="absolute top-5 left-1/2 right-1/2">
+                  <CircularProgress size={20} />
+                </div>
+              ) : null}
             </button>
           </div>
-        </div>
-      )}
-      {isSending && (
-        <div className="fixed top-0 left-0 right-0 bg-[rgba(0,0,0,.3)] w-[100%] h-[100%] flex items-center justify-center z-50">
-          <CircularProgress />
         </div>
       )}
     </div>

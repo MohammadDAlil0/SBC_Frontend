@@ -13,10 +13,10 @@ import '@react-pdf-viewer/core/lib/styles/index.css'
 import '@react-pdf-viewer/default-layout/lib/styles/index.css'
 
 interface CustomPDFViewerProps {
-  url: string
+  fileUrl: string
 }
 
-const CustomPDFViewer: FC<CustomPDFViewerProps> = ({ url }) => {
+const CustomPDFViewer: FC<CustomPDFViewerProps> = ({ fileUrl }) => {
   // 1. Create a transform function that blanks out the slots you don't want
   const transform: TransformToolbarSlot = (slot: ToolbarSlot) => ({
     ...slot,
@@ -25,12 +25,12 @@ const CustomPDFViewer: FC<CustomPDFViewerProps> = ({ url }) => {
     Download: () => <></>,
     Print: () => <></>,
 
-    // hide their counterparts in the “More actions” ⋯ menu
+    // hide their counterparts in the "More actions" ⋯ menu
     OpenMenuItem: () => <></>,
     DownloadMenuItem: () => <></>,
     PrintMenuItem: () => <></>,
 
-    // if you want to remove the “⋯” menu button entirely, uncomment:
+    // if you want to remove the "⋯" menu button entirely, uncomment:
     MoreActionsPopoverButton: () => <></>,
   })
 
@@ -45,11 +45,15 @@ const CustomPDFViewer: FC<CustomPDFViewerProps> = ({ url }) => {
     ),
   })
 
+  console.log(fileUrl)
+
   return (
-    <div className="border" style={{ height: 'calc(100vh  - 100px )' }}>
-      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-        <Viewer fileUrl={url} plugins={[defaultLayoutPluginInstance]} />
-      </Worker>
+    <div className="border" style={{ height: 'calc(100vh - 100px)' }}>
+      {fileUrl ? (
+        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+          <Viewer fileUrl={fileUrl} plugins={[defaultLayoutPluginInstance]} />
+        </Worker>
+      ) : null}
     </div>
   )
 }

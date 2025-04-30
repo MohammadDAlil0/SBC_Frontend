@@ -23,7 +23,7 @@ function HeroSection() {
           </span>
         </h1>
         <Link
-          href="/"
+          href="#codes"
           className="primary-theme-btn text-white rounded-full px-6 py-2 md:text-[24px] text-[20px] cursor-pointer"
         >
           استعرض المزيد

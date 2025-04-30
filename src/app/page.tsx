@@ -2,7 +2,7 @@ import CodesCards from '@/components/sections/CodesCards'
 import Footer from '@/components/sections/Footer'
 import HeroSection from '@/components/sections/HeroSection'
 import Logos from '@/components/sections/Logos'
-import Newsletter from '@/components/sections/Newsletter'
+// import Newsletter from '@/components/sections/Newsletter'
 import Testimonials from '@/components/sections/Testimonials'
 import Link from 'next/link'
 
@@ -41,7 +41,7 @@ export default function HomePage() {
       <Logos />
       <CodesCards />
       <Testimonials />
-      <Newsletter />
+      {/* <Newsletter /> */}
       <Footer />
     </main>
   )

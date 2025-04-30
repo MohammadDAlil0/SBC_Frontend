@@ -6,7 +6,7 @@ import { CircularProgress } from '@mui/material'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
-export default function ChatInput() {
+export default function ChatInput({ setHasNew }: { setHasNew: () => void }) {
   const [input, setInput] = useState('')
   const [isSending, setIsSending] = useState(false)
 
@@ -22,10 +22,10 @@ export default function ChatInput() {
       const res = await axios.post('chat/' + codeId)
 
       const chatId = res.data.data.id
-      const resChat = await axios.post('chat/' + chatId + '/ask', {
+      await axios.post('chat/' + chatId + '/ask', {
         content: input,
       })
-      console.log(resChat)
+      setHasNew()
       router.push(`/chats?id=${chatId}`)
     } catch (err) {
       setIsSending(false)
