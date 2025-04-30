@@ -1,4 +1,5 @@
 import PDFPreviewPage from '@/components/sections/PDFPreviewPage'
+import { Suspense } from 'react'
 
 export default async function CodeDetailsPage() {
   // if (!codeId || !collectionName) {
@@ -6,8 +7,8 @@ export default async function CodeDetailsPage() {
   // }
 
   return (
-    <>
+    <Suspense fallback={<div>جار التحميل...</div>}>
       <PDFPreviewPage />
-    </>
+    </Suspense>
   )
 }
