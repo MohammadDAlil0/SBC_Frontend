@@ -3,7 +3,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-// import { API_BASE_URL } from '@/constants/domains'
+import { API_BASE_URL } from '@/constants/domains'
 
 const PDFViewer = dynamic(() => import('./PDFViewer'), { ssr: false })
 
@@ -14,7 +14,7 @@ export default function PDFPreviewPage() {
   const codeId = searchParams.get('codeId')
 
   useEffect(() => {
-    setUrl(`http://localhost:3001/book/${collectionName}.pdf`)
+    setUrl(`${API_BASE_URL}book/${collectionName}.pdf`)
   }, [collectionName])
 
   return (
