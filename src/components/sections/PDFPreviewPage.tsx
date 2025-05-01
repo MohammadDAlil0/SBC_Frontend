@@ -14,7 +14,7 @@ export default function PDFPreviewPage() {
   const codeId = searchParams.get('codeId')
 
   useEffect(() => {
-    setUrl(`${API_BASE_URL}book/${collectionName}.pdf`)
+    setUrl(`http://localhost:3001/book/${collectionName}.pdf`)
   }, [collectionName])
 
   return (
